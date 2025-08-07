@@ -9,7 +9,8 @@ const SelectMode = () => {
   const startGame = useGameStore((state) => state.startGame);
 
   const handleModeSelect = (path: string, mode: 'ai' | 'friends' | 'random') => {
-    startGame(mode);
+    // In a real app, you'd pass the mode to the store, e.g., startGame(mode)
+    startGame();
     navigate(path, { state: { fromSelectMode: true } });
   };
 

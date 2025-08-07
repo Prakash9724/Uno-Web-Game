@@ -10,6 +10,7 @@ interface PlayerHandProps {
 
 const PlayerHand: React.FC<PlayerHandProps> = ({ player, cards }) => {
   const { currentTurn, playCard, discardPile, currentColor } = useGameStore();
+  
   const topCard = discardPile[discardPile.length - 1];
   const isCurrentPlayer = currentTurn === player;
 
@@ -17,6 +18,7 @@ const PlayerHand: React.FC<PlayerHandProps> = ({ player, cards }) => {
     if (!isCurrentPlayer) return false;
     if (card.value.startsWith('wild')) {
         if (card.value === 'wild-draw-four') {
+            // Rule: Can only play WD4 if no other card matches the current color
             return !cards.some(c => c.color === currentColor);
         }
         return true;
@@ -33,6 +35,7 @@ const PlayerHand: React.FC<PlayerHandProps> = ({ player, cards }) => {
       <h2 className={`text-2xl font-bold transition-all ${isCurrentPlayer ? 'text-brand-secondary scale-110' : 'text-brand-textSecondary'}`}>
         {player === 'player1' ? 'Your Hand' : 'Opponent'} ({cards.length})
       </h2>
+      
       <div
         className="relative flex justify-center items-end h-48 transition-all duration-500"
         style={{ width: `${totalWidth}px`, minWidth: '200px' }}
@@ -45,23 +48,32 @@ const PlayerHand: React.FC<PlayerHandProps> = ({ player, cards }) => {
             return (
               <motion.div
                 key={card.id}
+                layout
                 initial={{ opacity: 0, y: 50, scale: 0.8 }}
                 animate={{
                   opacity: 1,
                   y: 0,
                   x: offset,
                   rotate: rotation,
-                  scale: 1,
                   zIndex: index,
                 }}
                 exit={{ opacity: 0, y: -100, scale: 0.8 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                whileHover={
+                  isPlayable(card)
+                    ? { y: -40, scale: 1.25, rotate: 0, zIndex: 100 }
+                    : {}
+                }
                 className="absolute"
+                onClick={() => {
+                  if (isPlayable(card)) {
+                    playCard(player, card);
+                  }
+                }}
               >
                 <CardComponent
                   card={card}
                   isPlayable={isPlayable(card)}
-                  onClick={() => isPlayable(card) && playCard(player, card)}
                 />
               </motion.div>
             );
