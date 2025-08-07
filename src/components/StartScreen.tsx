@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useGameStore } from '../store/gameStore';
 import CardBack from './CardBack';
 
 const StartScreen: React.FC = () => {
-  const navigate = useNavigate();
+  const startGame = useGameStore((state) => state.startGame);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen text-white">
@@ -35,9 +35,9 @@ const StartScreen: React.FC = () => {
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.5 }}
-        whileHover={{ scale: 1.05, boxShadow: '0px 0px 20px rgba(158, 127, 255, 0.5)' }}
+        whileHover={{ scale: 1.05, boxShadow: '0px 0px 20px rgba(56, 189, 248, 0.5)' }}
         whileTap={{ scale: 0.95 }}
-        onClick={() => navigate('/select-mode')}
+        onClick={startGame}
         className="px-12 py-4 bg-brand-primary text-white font-bold text-2xl rounded-xl shadow-lg transition-all"
       >
         Start Game
